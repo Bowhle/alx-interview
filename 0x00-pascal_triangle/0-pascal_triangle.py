@@ -29,10 +29,10 @@ def pascal_triangle(n):
         for j in range(1, i):
             current_row.append(prev_row[j-1] + prev_row[j])
         
-        # End the row with 1
+        # End row with 1
         current_row.append(1)
         
-        # Add the current row to our triangle
+        # Add current row to triangle
         triangle.append(current_row)
     
     return triangle
