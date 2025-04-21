@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """
-0-pascal_triangle.py
-Function that returns Pascal's Triangle up to n rows
+This function returns Pascal's Triangle up to n rows
 """
 
 
@@ -18,21 +17,18 @@ def pascal_triangle(n):
     if n <= 0:
         return []
     
-    triangle = [[1]]  # First row is always [1]
+    triangle = [[1]]
     
     for i in range(1, n):
-        # Previous row
         prev_row = triangle[-1]
-        # Start row with 1
         current_row = [1]
         
         for j in range(1, i):
             current_row.append(prev_row[j-1] + prev_row[j])
         
-        # End row with 1
         current_row.append(1)
         
-        # Add current row to triangle
+        # Appends the current row to the triangle
         triangle.append(current_row)
     
     return triangle
