@@ -3,10 +3,13 @@
 Module for canUnlockAll function
 """
 
+
 def canUnlockAll(boxes):
     """
-    Determines if all boxes can be opened
-    :param boxes: list of lists, where each sublist contains keys to other boxes
+    Determines if all boxes can be opened.
+
+    :param boxes: list of lists, where each sublist contains keys
+    :to other boxes
     :return: True if all boxes can be opened, else False
     """
     n = len(boxes)
