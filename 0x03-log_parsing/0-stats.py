@@ -1,50 +1,71 @@
 #!/usr/bin/python3
 """
-Read stdin line by line and computes metrics
-Input format: <IP Address> - [<date>] "GET /projects/260 HTTP/1.1"
-<status code> <file size>, skip line if not this format
-After every 10minutes or keyboard interrupt (CTRL + C)
-print these from beginning: number of lines by status code
-possible status codes: 200, 301, 400, 401, 404, 405, and 500
-if status code isn't an integer, do not print it
-format: <status code>: <number>
-Status code must be printed in ascending order
+Script that reads stdin line by line and computes metrics.
 """
 import sys
-import time
+import re
 
-def print_msg(codes, file_size):
-    print("File size: {}".format(file_size))
-    for key, val in sorted(codes.items()):
-        if val != 0:
-            print("{}: {}".format(key, val))
 
-file_size = 0
-codes = {
-    200: 0,
-    301: 0,
-    400: 0,
-    401: 0,
-    403: 0,
-    404: 0,
-    405: 0,
-    500: 0
-}
+def print_stats(total_size, status_codes):
+    """
+    Print statistics including total file size and count of each status code.
 
-line_count = 0
-try:
-    for line in sys.stdin:
-        line_count += 1
-        # parse the line and extract the status code and file size
-        # (assuming the input format is correct)
-        status_code = int(line.split()[-2])
-        file_size += int(line.split()[-1])
-        codes[status_code] += 1
+    Args:
+        total_size (int): Total file size.
+        status_codes (dict): Dictionary containing counts of status codes.
+    """
+    print("File size: {}".format(total_size))
+    for code in sorted(status_codes.keys()):
+        if status_codes[code] > 0:
+            print("{}: {}".format(code, status_codes[code]))
 
-        if line_count % 10 == 0:
-            print_msg(codes, file_size)
-            codes = {k: 0 for k in codes.keys()}
-            file_size = 0
 
-except KeyboardInterrupt:
-    print_msg(codes, file_size)
+def main():
+    """
+    Main function to parse stdin line by line and compute metrics.
+    """
+    # Initialize variables
+    total_size = 0
+    status_codes = {
+        '200': 0, '301': 0, '400': 0, '401': 0,
+        '403': 0, '404': 0, '405': 0, '500': 0
+    }
+    line_count = 0
+
+    # Regular expression to match the expected log format
+    pattern = r'(\d+\.\d+\.\d+\.\d+) - \[(.*?)\] "GET /projects/260 HTTP/1.1" (\d+) (\d+)'
+
+    try:
+        for line in sys.stdin:
+            line = line.strip()
+            match = re.match(pattern, line)
+
+            if match:
+                # Extract status code and file size from the matched line
+                status_code = match.group(3)
+                file_size = int(match.group(4))
+
+                # Update total file size
+                total_size += file_size
+
+                # Update status code count if it's one we're tracking
+                if status_code in status_codes:
+                    status_codes[status_code] += 1
+
+            # Increment line count
+            line_count += 1
+
+            # Print statistics after every 10 lines
+            if line_count % 10 == 0:
+                print_stats(total_size, status_codes)
+
+    except KeyboardInterrupt:
+        # Handle keyboard interruption (CTRL + C)
+        pass
+    finally:
+        # Print statistics one last time
+        print_stats(total_size, status_codes)
+
+
+if __name__ == "__main__":
+    main()
