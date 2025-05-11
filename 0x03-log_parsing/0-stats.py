@@ -1,54 +1,48 @@
 #!/usr/bin/python3
 
 import sys
+import re
+from collections import defaultdict
 
-
-def print_msg(dict_sc, total_file_size):
+def print_stats(status_counts, total_file_size):
     """
-    Method to print
+    Prints the accumulated statistics.
+
     Args:
-        dict_sc: dict of status codes
-        total_file_size: total of the file
+        status_counts (dict): Dictionary storing the count of each status code.
+        total_file_size (int): The total size of all processed files.
+
     Returns:
-        Nothing
+        None
     """
-
     print("File size: {}".format(total_file_size))
-    for key, val in sorted(dict_sc.items()):
-        if val != 0:
-            print("{}: {}".format(key, val))
-
+    for code in sorted(status_counts.keys()):
+        if status_counts[code] > 0:
+            print("{}: {}".format(code, status_counts[code]))
 
 total_file_size = 0
-code = 0
-counter = 0
-dict_sc = {"200": 0,
-           "301": 0,
-           "400": 0,
-           "401": 0,
-           "403": 0,
-           "404": 0,
-           "405": 0,
-           "500": 0}
+status_counts = defaultdict(int)
+line_count = 0
 
 try:
     for line in sys.stdin:
-        parsed_line = line.split()  # ✄ trimming
-        parsed_line = parsed_line[::-1]  # inverting
+        match = re.match(
+            r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[(.*?)\] '
+            r'"GET /projects/260 HTTP/1\.1" (\d{3}) (\d+)',
+            line
+        )
+        if match:
+            status_code = match.group(3)
+            file_size = int(match.group(4))
+            total_file_size += file_size
+            status_counts[status_code] += 1
 
-        if len(parsed_line) > 2:
-            counter += 1
+        line_count += 1
+        if line_count % 10 == 0:
+            print_stats(status_counts, total_file_size)
 
-            if counter <= 10:
-                total_file_size += int(parsed_line[0])  # file size
-                code = parsed_line[1]  # status code
-
-                if (code in dict_sc.keys()):
-                    dict_sc[code] += 1
-
-            if (counter == 10):
-                print_msg(dict_sc, total_file_size)
-                counter = 0
+except KeyboardInterrupt:
+    print_stats(status_counts, total_file_size)
 
 finally:
-    print_msg(dict_sc, total_file_size)
+    print_stats(status_counts, total_file_size)
