@@ -4,6 +4,7 @@ import sys
 import re
 from collections import defaultdict
 
+
 def print_stats(status_counts, total_file_size):
     """
     Prints the accumulated statistics.
@@ -20,6 +21,7 @@ def print_stats(status_counts, total_file_size):
     for code in sorted(status_counts.keys()):
         if status_counts[code] > 0:
             print("{}: {}".format(code, status_counts[code]))
+
 
 total_file_size = 0
 status_counts = defaultdict(int)
@@ -47,4 +49,3 @@ except KeyboardInterrupt:
 
 finally:
     print_stats(status_counts, total_file_size)
-    
