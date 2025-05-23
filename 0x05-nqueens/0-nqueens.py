@@ -2,17 +2,15 @@
 """Solves the N Queens problem using backtracking."""
 import sys
 
-# Check for correct number of arguments
-if len(sys.argv) != 2:
+
+if len(sys.argv) > 2 or len(sys.argv) < 2:
     print("Usage: nqueens N")
     exit(1)
 
-# Check if argument is a number
 if not sys.argv[1].isdigit():
     print("N must be a number")
     exit(1)
 
-# Check if N is at least 4
 if int(sys.argv[1]) < 4:
     print("N must be at least 4")
     exit(1)
@@ -20,17 +18,17 @@ if int(sys.argv[1]) < 4:
 n = int(sys.argv[1])
 
 
-def queens(n, row=0, cols=[], diag1=[], diag2=[]):
+def queens(n, i=0, a=[], b=[], c=[]):
     """
     Generates all possible solutions for the N Queens problem.
     Uses backtracking to place queens row by row.
     """
-    if row < n:
-        for col in range(n):
-            if col not in cols and row + col not in diag1 and row - col not in diag2:
-                yield from queens(n, row + 1, cols + [col], diag1 + [row + col], diag2 + [row - col])
+    if i < n:
+        for j in range(n):
+            if j not in a and i + j not in b and i - j not in c:
+                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
     else:
-        yield cols
+        yield a
 
 
 def solve(n):
@@ -38,8 +36,15 @@ def solve(n):
     Prints all solutions in the required format.
     Each solution is a list of [row, col] positions for each queen.
     """
-    for solution in queens(n):
-        print([[row, col] for row, col in enumerate(solution)])
+    k = []
+    i = 0
+    for solution in queens(n, 0):
+        for s in solution:
+            k.append([i, s])
+            i += 1
+        print(k)
+        k = []
+        i = 0
 
 
 solve(n)
