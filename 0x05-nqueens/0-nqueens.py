@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" N queens """
+""" Nqueens """
 import sys
 
 
@@ -19,7 +19,7 @@ n = int(sys.argv[1])
 
 
 def queens(n, i=0, a=[], b=[], c=[]):
-    """ find possible positions """
+    """ checks for possible positions """
     if i < n:
         for j in range(n):
             if j not in a and i + j not in b and i - j not in c:
@@ -29,7 +29,7 @@ def queens(n, i=0, a=[], b=[], c=[]):
 
 
 def solve(n):
-    """ solve """
+    """ solves the problem """
     k = []
     i = 0
     for solution in queens(n, 0):
