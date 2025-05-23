@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Solves the N Queens problem using backtracking."""
+""" N queens """
 import sys
 
 
@@ -19,7 +19,7 @@ n = int(sys.argv[1])
 
 
 def queens(n, i=0, a=[], b=[], c=[]):
-    """ checks for possible positions """
+    """ find possible positions """
     if i < n:
         for j in range(n):
             if j not in a and i + j not in b and i - j not in c:
@@ -29,7 +29,7 @@ def queens(n, i=0, a=[], b=[], c=[]):
 
 
 def solve(n):
-    """ Prints all solutions in the required format """
+    """ solve """
     k = []
     i = 0
     for solution in queens(n, 0):
