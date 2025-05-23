@@ -19,10 +19,7 @@ n = int(sys.argv[1])
 
 
 def queens(n, i=0, a=[], b=[], c=[]):
-    """
-    Generates all possible solutions for the N Queens problem.
-    Uses backtracking to place queens row by row.
-    """
+    """ checks for possible positions """
     if i < n:
         for j in range(n):
             if j not in a and i + j not in b and i - j not in c:
@@ -32,10 +29,7 @@ def queens(n, i=0, a=[], b=[], c=[]):
 
 
 def solve(n):
-    """
-    Prints all solutions in the required format.
-    Each solution is a list of [row, col] positions for each queen.
-    """
+    """ Prints all solutions in the required format """
     k = []
     i = 0
     for solution in queens(n, 0):
