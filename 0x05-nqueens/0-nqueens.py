@@ -3,10 +3,9 @@
 A program that solves the N-queens challenge.
 """
 import sys
-from typing import List
 
 
-def is_safe(board: List[int], row: int, col: int) -> bool:
+def is_safe(board, row, col):
     """
     Check if it's safe to place a queen at position (row, col) on the board.
     """
@@ -18,9 +17,7 @@ def is_safe(board: List[int], row: int, col: int) -> bool:
     return True
 
 
-def solve_nqueens(
-        board: List[int], row: int, n: int, solutions: List[List[int]]
-        ):
+def solve_nqueens(board, row, n, solutions):
     """
     Recursively find a safe place for a queen in the current row.
     """
@@ -35,7 +32,7 @@ def solve_nqueens(
             board[row] = -1
 
 
-def nqueens(n: int) -> List[List[int]]:
+def nqueens(n):
     """
     Solve the N-queens problem for a given board size.
     """
@@ -45,7 +42,7 @@ def nqueens(n: int) -> List[List[int]]:
     return solutions
 
 
-def print_solutions(solutions: List[List[int]]):
+def print_solutions(solutions):
     """
     Print all solutions to the N-queens problem.
     """
@@ -75,4 +72,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
