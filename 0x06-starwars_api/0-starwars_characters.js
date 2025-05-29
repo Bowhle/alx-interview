@@ -1,55 +1,45 @@
 #!/usr/bin/node
 
-const request = require("request");
+const request = require('request');
 
-const movieURL = `https://swapi-api.hbtn.io/api/films/${process.argv[2]}`;
-
-const fetchMovie = (url, callback) => {
-  request(url, (err, res, body) => {
-    if (err) {
-      console.error(`Error fetching movie data: ${err.message}`);
-      process.exit(1);
-    }
-    if (res.statusCode !== 200) {
-      console.error(
-        `Failed to fetch movie data. Status code: ${res.statusCode}`,
-      );
-      process.exit(1);
-    }
-    callback(JSON.parse(body));
+/**
+ * Fetch JSON data from a provided URL using a Promise.
+ * @param {string} url - The API endpoint to retrieve data from.
+ * @returns {Promise<Object>} - A Promise resolving to the parsed JSON response.
+ */
+function fetchJSON (url) {
+  return new Promise((resolve, reject) => {
+    request(url, (err, res, body) => {
+      if (err) reject(err);
+      else resolve(JSON.parse(body));
+    });
   });
-};
+}
 
-const fetchCharacter = (url, callback) => {
-  request(url, (err, res, body) => {
-    if (err) {
-      console.error(`Error fetching character data: ${err.message}`);
-      process.exit(1);
+/**
+ * Retrieve and display the names of characters in a Star Wars film.
+ * Characters are printed in the same order as they appear in the film.
+ * @param {string} movieId - The ID of the Star Wars film to fetch.
+ */
+async function fetchAndPrintCharacters (movieId) {
+  try {
+    const film = await fetchJSON(`https://swapi-api.alx-tools.com/api/films/${movieId}`);
+    const characters = film.characters;
+
+    for (const url of characters) {
+      const character = await fetchJSON(url);
+      console.log(character.name);
     }
-    if (res.statusCode !== 200) {
-      console.error(
-        `Failed to fetch character data. Status code: ${res.statusCode}`,
-      );
-      process.exit(1);
-    }
-    callback(JSON.parse(body));
-  });
-};
+  } catch (err) {
+    console.error(err);
+  }
+}
 
-const logCharacters = (characters, index) => {
-  if (index === characters.length) return;
-  fetchCharacter(characters[index], (character) => {
-    console.log(character.name);
-    logCharacters(characters, index + 1);
-  });
-};
-
-if (process.argv.length < 3) {
-  console.error("Usage: ./script <movie_id>");
+// Entry point: check for movie ID input and execute main logic
+const movieId = process.argv[2];
+if (!movieId) {
+  console.error('Usage: ./0-starwars_characters.js <Movie ID>');
   process.exit(1);
 }
 
-fetchMovie(movieURL, (movie) => {
-  logCharacters(movie.characters, 0);
-});
-
+fetchAndPrintCharacters(movieId);
