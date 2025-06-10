@@ -10,15 +10,12 @@ The goal of this project is to rotate a given 2D matrix in place, which means yo
 
 1. **Matrix Representation in Python**:
    - Understanding how 2D matrices are represented using lists of lists in Python.
-   - Accessing and modifying elements in a 2D matrix.
 
 2. **In-place Operations**:
    - Performing operations on data without creating a copy of the data structure.
-   - Minimizing space complexity by modifying the matrix in place.
 
 3. **Matrix Transposition**:
-   - Understanding the concept of transposing a matrix (swapping rows and columns).
-   - Implementing matrix transposition as a step in the rotation process.
+   - Understanding the concept of transposing a matrix (swapping rows and columns)..
 
 4. **Reversing Rows in a Matrix**:
    - Manipulating rows of a matrix by reversing their order as part of the rotation process.
